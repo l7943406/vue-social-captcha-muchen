@@ -7,7 +7,7 @@
 <script>
 import axios from 'axios'
 export default {
-    name: 'Captcha',
+    name: 'CaptchaDefault',
     props: {
         parm: {
             type: Object,
@@ -86,39 +86,39 @@ export default {
                 }
             }
         },
-        TencentCaptchaInit(){
-            const t = this;
-            new TencentCaptcha(
-                document.getElementById(t.id),
-                t.parm.appid,
-                function(res) {
-                    //console.log(res)
-                    if(res.ret === 0){
-                        t.loading(res);
-                        // 成功
-                        axios.get(t.url,{
-                            params: {
-                                g_type: t.type,
-                                g_scene: t.scene,
-                                ticket: res.ticket,
-                                randstr: res.randstr,
-                                bizState: res.bizState
-                            }
-                        }).then((response) => {
-                            if(response.data.code == 1){
-                                t.success(response.data);
-                            }else{
-                                t.error(response.data);
-                            }
-                        }).catch(function (error) {
-                            t.error(error);
-                        })
-                    }else{
-                        // 失败
-                        t.error(res);
+        TencentCaptchaInit() {
+          const t = this;
+
+          document.getElementById(t.id),
+              t.parm.appid,
+              function (res) {
+                //console.log(res)
+                if (res.ret === 0) {
+                  t.loading(res);
+                  // 成功
+                  axios.get(t.url, {
+                    params: {
+                      g_type: t.type,
+                      g_scene: t.scene,
+                      ticket: res.ticket,
+                      randstr: res.randstr,
+                      bizState: res.bizState
                     }
+                  }).then((response) => {
+                    if (response.data.code == 1) {
+                      t.success(response.data);
+                    } else {
+                      t.error(response.data);
+                    }
+                  }).catch(function (error) {
+                    t.error(error);
+                  })
+                } else {
+                  // 失败
+                  t.error(res);
                 }
-            );
+              }
+
         },
         GeetestInit(){
             const t = this;
@@ -137,7 +137,8 @@ export default {
                         offline: !data.success, // 表示用户后台检测极验服务器是否宕机
                         new_captcha: true // 用于宕机时表示是新验证码的宕机
                     }
-                    initGeetest(Object.assign(o,t.parm), function (captchaObj) {
+                    const captchaObj = Object.assign(o, t.parm);
+
                         captchaObj.appendTo("#"+t.id);
                         //console.log(captchaObj)
                         captchaObj.onReady(function(){
@@ -150,7 +151,7 @@ export default {
                         document.getElementById(t.id).addEventListener('click', function(){
                             captchaObj.verify();
                         }, false)
-                    })
+
                 }else{
                     t.error(response.data);
                 }

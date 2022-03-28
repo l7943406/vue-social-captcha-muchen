@@ -6,5 +6,4 @@ Captcha.install = function (Vue) {
   Vue.component(Captcha.name, Captcha)
 }
 
-// 默认导出组件
 export default Captcha
